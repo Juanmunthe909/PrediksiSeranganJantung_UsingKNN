@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Attack Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            margin-top: 16px;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Heart Attack Prediction</h1>
+    <form method="post" action="{{ url_for('predict') }}">
+        <!-- Input form for prediction -->
+        <label for="age">Usia:</label>
+        <input type="text" name="age" id="age" required>
+
+        <label for="sex">Jenis Kelamin:</label>
+        <select name="sex" id="sex" required>
+            <option value="0">Perempuan</option>
+            <option value="1">Laki - Laki</option>
+        </select>
+
+        <label for="cp">Tipe Nyeri Dada (cp):</label>
+        <select name="cp" id="cp" required>
+            <option value="0">Tidak Ada</option>
+            <option value="1">Tipikal Angina</option>
+            <option value="2">Atipikal Angina</option>
+            <option value="3">Non-Anginal</option>
+        </select>
+
+        <label for="trtbps">Tekanan Darah (TRTBPS):</label>
+        <input type="text" name="trtbps" id="trtbps" required>
+
+        <label for="chol">Kolesterol:</label>
+        <input type="text" name="chol" id="chol" required>
+
+        <label for="fbs">Gula Darah Puasa (fbs):</label>
+        <select name="fbs" id="fbs" required>
+            <option value="0">Kurang dari 120 mg/dl</option>
+            <option value="1">Lebih dari 120 mg/dl</option>
+        </select>
+
+        <label for="restecg">Elektrokardiografi Istirahat (restecg):</label>
+        <select name="restecg" id="restecg" required>
+            <option value="0">Normal</option>
+            <option value="1">ST-T abnormality</option>
+            <option value="2">Hypertrophy</option>
+        </select>
+
+        <label for="thalachh">Denyut Jantung Maksimal (thalachh):</label>
+        <input type="text" name="thalachh" id="thalachh" required>
+
+        <label for="exng">Latihan yang Dipicu Angina (exng):</label>
+        <select name="exng" id="exng" required>
+            <option value="0">Tidak</option>
+            <option value="1">Ya</option>
+        </select>
+
+        <label for="oldpeak">Depresi ST Induk (oldpeak):</label>
+        <input type="text" name="oldpeak" id="oldpeak" required>
+
+        <label for="slp">Kemiringan Segmen ST Selama Latihan (slp):</label>
+        <select name="slp" id="slp" required>
+            <option value="0">Tidak Ada</option>
+            <option value="1">Cukup Tidak Normal</option>
+            <option value="2">Normal</option>
+        </select>
+
+        <label for="caa">Jumlah Pembuluh Besar Berwarna (caa):</label>
+        <select name="caa" id="caa" required>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+
+        <label for="thall">Thalassemia (thall):</label>
+        <select name="thall" id="thall" required>
+            <option value="1">Normal</option>
+            <option value="2">Thalassemia Reversable</option>
+            <option value="3">Thalassemia Irreversable</option>
+        </select>
+
+        <!-- Add more input fields for other features as needed -->
+
+        <input type="submit" value="Prediksi">
+    </form>
+
+   <center>
+  <div class="results">
+    {% if prediction is not none %}
+        <p>Prediksi: {{ prediction }}</p>
+    {% endif %}
+
+    {% if class_accuracy is not none %}
+        <p>Akurasi Model untuk Kelas 0: {{ class_accuracy[0] }}</p>
+        <p>Akurasi Model untuk Kelas 1: {{ class_accuracy[1] }}</p>
+    {% endif %}
+
+    <!-- Add this section for displaying the graph -->
+    <div id="predictionGraph"></div>
+    <center>
+</div>
+
+   <!-- Include necessary scripts -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    // Parse the base64 image string
+    var imgStr = "{{ prediction_graph }}";
+    
+    // Create an image element
+    var img = new Image();
+    img.src = imgStr;
+
+    // Append the image to the div
+    var predictionGraphDiv = document.getElementById('predictionGraph');
+    predictionGraphDiv.appendChild(img);
+</script>
+
+</body>
+</html>
